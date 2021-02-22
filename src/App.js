@@ -1,25 +1,57 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { getIssues } from "./features/issues/IssueSlice";
+import Issue from "./components/Issue";
+import Pagination from "./components/Pagination";
+import _ from "lodash";
+import Navbar from "./components/Navbar";
 
 function App() {
+  const state = useSelector(state => state);
+
+  const dispach = useDispatch();
+  const [currentPage, setCurrentPage] = useState(0);
+  const [pageSize, setPageSize] = useState(9);
+
+  const handleOnChange = page => {
+    setCurrentPage(page);
+  };
+
+  console.log("App state--> 2", state);
+
+  const paginate = (items, currentPage, pageSize) => {
+    let startIndex = (currentPage - 1) * pageSize;
+    return _(items)
+      .slice(startIndex)
+      .take(pageSize)
+      .value();
+  };
+  useEffect(() => {
+    dispach(getIssues());
+    console.log("App state--> 1", state);
+  }, []);
+
+  const issues = paginate(state.list, currentPage, pageSize);
+  const pages=[1,2,3,4,5];
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container-fluid">
+      <Navbar />
+
+      {console.log("App state--> 3", state)}
+      <ul className="list-group mt-3">
+        {issues.map((i, index) => {
+          return <Issue value={i} />;
+        })}
+      </ul>
+
+     <Pagination totalSize={state.list.length} currentPage={currentPage} handleOnChange={handleOnChange}/>
+   
+      
     </div>
   );
 }
 
 export default App;
+
+
