@@ -32,17 +32,14 @@ console.log(date);
       }
       const url=props.value.html_url;
       {console.log("href",url);}
+      
 
     return (
 
-        <div  className="list-group-item list-group-item-action font-weight-bolder" onClick={(e)=>{
-           e.preventDefault();
-            console.log("href",url);
-            window.location.href={url}
-        }}>
+        <div  className="list-group-item list-group-item-action font-weight-bolder" >
             
            <div style={{color:"#272727"}}>
-           <h5 style={{display:"inline-block"}}>{props.value.title}</h5>
+           <a href={url} ><h5 style={{display:"inline-block"}}>{props.value.title}</h5></a>
          
            {props.value.labels.map((item)=>{
            return <span style={{backgroundColor:"#"+item.color}} class="badge badge-pill m-1 p-2">{item.name}</span>})}

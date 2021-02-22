@@ -5,7 +5,7 @@ const Navbar = () => {
     <nav className="navbar navbar-light bg-light justify-content-between">
       <a className="navbar-brand">Github Issue Page</a>
       <form className="form-inline">
-        <input
+        {/* <input
           className="form-control mr-sm-2"
           type="search"
           placeholder="Search"
@@ -13,7 +13,7 @@ const Navbar = () => {
         />
         <button className="btn btn-outline-success my-2 my-sm-0" type="submit">
           Search
-        </button>
+        </button> */}
       </form>
     </nav>
   );

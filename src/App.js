@@ -5,6 +5,7 @@ import Issue from "./components/Issue";
 import Pagination from "./components/Pagination";
 import _ from "lodash";
 import Navbar from "./components/Navbar";
+import './App.css'
 
 function App() {
   const state = useSelector(state => state);
