@@ -5,20 +5,29 @@ import Issue from "./components/Issue";
 import Pagination from "./components/Pagination";
 import _ from "lodash";
 import Navbar from "./components/Navbar";
-import './App.css'
+import "./App.css";
 
 function App() {
   const state = useSelector(state => state);
 
   const dispach = useDispatch();
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(9);
+  const [searchDone, setSearchDone] = useState("");
+  const [issues, setIssues] = useState([]);
 
   const handleOnChange = page => {
     setCurrentPage(page);
+    const newissues = paginate(state.list, page, pageSize);
+    setIssues(newissues);
   };
-
-  console.log("App state--> 2", state);
+  const handleSearch = search => {
+    const results = _.filter(state.list, function(item) {
+      return item.title.indexOf(search) > -1;
+    });
+    setSearchDone(search);
+    setIssues(results);
+  };
 
   const paginate = (items, currentPage, pageSize) => {
     let startIndex = (currentPage - 1) * pageSize;
@@ -29,30 +38,33 @@ function App() {
   };
   useEffect(() => {
     dispach(getIssues());
-    console.log("App state--> 1", state);
   }, []);
-
-  const issues = paginate(state.list, currentPage, pageSize);
-  const pages=[1,2,3,4,5];
+  useEffect(() => {
+    const newissues = paginate(state.list, currentPage, pageSize);
+    setIssues(newissues);
+  }, [state.list]);
 
   return (
-    <div className="container-fluid">
-      <Navbar />
+    <>
+      <Navbar handleSearch={handleSearch} />
 
-      {console.log("App state--> 3", state)}
-      <ul className="list-group mt-3">
-        {issues.map((i, index) => {
-          return <Issue value={i} />;
-        })}
-      </ul>
+      <div className="container-fluid">
+        <ul className="list-group mt-3">
+          {issues.map((i, index) => {
+            return <Issue key={index} value={i} />;
+          })}
+        </ul>
 
-     <Pagination totalSize={state.list.length} currentPage={currentPage} handleOnChange={handleOnChange}/>
-   
-      
-    </div>
+        {!searchDone && (
+          <Pagination
+            totalSize={state.list.length}
+            currentPage={currentPage}
+            handleOnChange={handleOnChange}
+          />
+        )}
+      </div>
+    </>
   );
 }
 
 export default App;
-
-
